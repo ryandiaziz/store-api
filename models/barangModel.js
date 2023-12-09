@@ -1,4 +1,5 @@
 import client from "../connection.js"
+import { generateID, generateDate } from "../helper/generateData.js"
 
 class BarangModel {
     static async getBarang() {
@@ -12,10 +13,12 @@ class BarangModel {
 
     static async addBarang(nama, harga) {
         try {
-            const createdAt = new Date().toISOString()
+            const id = generateID()
+            const createdAt = generateDate()
             const updatedAt = createdAt
-            const id = `${nama}${createdAt.replace(/[^\d]/g, '')}`
+
             await client.query(`insert into barang(id,nama,harga,createdAt,updatedat) values('${id}','${nama}','${harga}','${createdAt}','${updatedAt}')`)
+
             return 'successfully added item'
         } catch (error) {
             throw (error)

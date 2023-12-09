@@ -12,6 +12,12 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', Routes);
 
+app.get('/', (req, res) => {
+    res.json({
+        info: 'Welcome'
+    })
+})
+
 app.listen(port, () => {
     console.log(`App listen on port ${port}`);
 });
