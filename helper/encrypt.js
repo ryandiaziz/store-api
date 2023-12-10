@@ -1,4 +1,5 @@
-// const bcrypt = require('bcrypt')
+import dotenv from 'dotenv'
+dotenv.config()
 import bcrypt from 'bcrypt'
 const salt = +process.env.SALT_ROUND
 

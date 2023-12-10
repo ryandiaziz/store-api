@@ -1,4 +1,3 @@
-// const { tokenVerifier } = require('../helper/jsonWebToken.js')
 import { tokenVerifier } from '../helper/jsonWebToken.js'
 
 const auth = (req, res, next) => {
@@ -10,11 +9,13 @@ const auth = (req, res, next) => {
             next()
         } catch {
             return res.status(401).json({
-                message: "access token not authenticated! "
+                message: "access token not authenticated!"
             })
         }
     } else {
-        res.status(404).json({ message: "Access token not found!" })
+        res.status(404).json({
+            message: "Access token not found!"
+        })
     }
 }
 

@@ -36,33 +36,33 @@ class UserController {
 
     static async login(req, res) {
         try {
-            // const { email, password } = req.body
-            // let account = await user.findOne({ where: { email: email } })
+            const { email, password } = req.body
+            const userData = await UserModel.getOneUser(email)
 
-            // if (account) {
-            //     if (decryptPwd(password, account.password)) {
-            //         let access_token = tokenGenerator(account)
-            //         res.status(200).json({
-            //             status: "ok",
-            //             access_token: access_token,
-            //         });
-            //     } else {
-            //         res.status(403).json({
-            //             status: "error",
-            //             message: "invalid password"
-            //         })
-            //     }
-            // } else {
-            //     res.status(404).json({
-            //         status: "error",
-            //         message: "User not found"
-            //     })
-            // }
+            if (userData.length) {
+                if (decryptPwd(password, userData[0].password)) {
+                    let access_token = tokenGenerator(...userData)
+                    res.status(200).json({
+                        status: "ok",
+                        access_token: access_token,
+                    });
+                } else {
+                    res.status(403).json({
+                        status: "error",
+                        message: "invalid password"
+                    })
+                }
+            } else {
+                res.status(404).json({
+                    status: "error",
+                    message: "User not found"
+                })
+            }
         } catch (err) {
-            // res.status(500).json({
-            //     status: "error",
-            //     message: err.message
-            // })
+            res.json({
+                status: false,
+                message: err.message
+            })
         }
     }
 

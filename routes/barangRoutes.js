@@ -1,9 +1,11 @@
 import express from 'express'
 import BarangController from '../controllers/barangController.js'
+import auth from '../middleware/auth.js'
+
 const barangRoute = express.Router()
 
-barangRoute.get('/', BarangController.getBarang)
-barangRoute.post('/', BarangController.addBarang)
-barangRoute.delete('/:id', BarangController.deleteBarang)
+barangRoute.get('/', auth, BarangController.getBarang)
+barangRoute.post('/', auth, BarangController.addBarang)
+barangRoute.delete('/:id', auth, BarangController.deleteBarang)
 
 export default barangRoute

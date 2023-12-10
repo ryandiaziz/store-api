@@ -22,7 +22,7 @@ class BarangController {
             const response = await BarangModel.addBarang(nama, harga)
             res.json({
                 status: true,
-                message: response
+                data: response
             })
         } catch (error) {
             res.json({

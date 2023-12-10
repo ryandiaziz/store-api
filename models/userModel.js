@@ -8,7 +8,12 @@ class UserModel {
             const id = generateID()
             const encryptPass = encryptPwd(password)
 
-            await client.query(`insert into userdata(id,nama,email,password) values('${id}','${nama}','${email}','${encryptPass}')`)
+            const query = {
+                text: 'INSERT INTO userdata(id, nama, email, password) VALUES($1, $2, $3, $4)',
+                values: [id, nama, email, encryptPass]
+            }
+
+            await client.query(query)
 
             return 'successfully created user'
         } catch (error) {
@@ -18,7 +23,21 @@ class UserModel {
 
     static async getusers() {
         try {
-            const data = await client.query('select * from userdata')
+            const data = await client.query('SELECT * FROM userdata')
+            return data.rows
+        } catch (error) {
+            throw (error)
+        }
+    }
+
+    static async getOneUser(email) {
+        try {
+            const query = {
+                text: 'SELECT * FROM userdata WHERE email = $1',
+                values: [email]
+            }
+
+            const data = await client.query(query)
             return data.rows
         } catch (error) {
             throw (error)

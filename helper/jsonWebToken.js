@@ -1,18 +1,19 @@
-// const jwt = require("jsonwebtoken")
+import dotenv from 'dotenv'
+dotenv.config()
 import jwt from 'jsonwebtoken'
-const screetCode = process.env.SECRET_CODE
+const secretCode = process.env.SECRET_CODE
 
 const tokenGenerator = (data) => {
-    const { id, name, email } = data;
+    const { id, nama, email } = data
     return jwt.sign({
-        id: id,
-        name: name,
-        email: email,
-    }, screetCode);
+        id,
+        nama,
+        email,
+    }, secretCode)
 };
 
 const tokenVerifier = (data) => {
-    return jwt.verify(data, screetCode)
+    return jwt.verify(data, secretCode)
 
 }
 
