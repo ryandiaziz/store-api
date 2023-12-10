@@ -47,6 +47,22 @@ class BarangController {
             })
         }
     }
+
+    static async updateBarang(req, res) {
+        try {
+            const { id } = req.params
+            const { nama, harga } = req.body
+
+            const data = await BarangModel.updateBarang(id, nama, harga)
+
+            res.send(data)
+        } catch (error) {
+            res.json({
+                status: false,
+                message: error.message
+            })
+        }
+    }
 }
 
 export default BarangController

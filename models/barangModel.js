@@ -11,15 +11,22 @@ class BarangModel {
         }
     }
 
+    static async getBarangById(id) {
+        try {
+            const res = await client.query('SELECT * FROM barang WHERE barang_id = $1', [id])
+            return res.rows[0]
+        } catch (error) {
+            throw (error)
+        }
+    }
+
     static async addBarang(nama, harga) {
         try {
             const id = generateID()
-            const createdAt = generateDate()
-            const updatedAt = createdAt
 
             const query = {
-                text: 'INSERT INTO barang(id, nama, harga, createdAt, updatedat) VALUES($1,$2,$3,$4,$5) RETURNING *',
-                values: [id, nama, harga, createdAt, updatedAt]
+                text: 'INSERT INTO barang(barang_id, barang_nama, barang_harga) VALUES(DEFAULT,$1,$2) RETURNING *',
+                values: [nama, harga]
             }
 
             const data = await client.query(query)
@@ -33,13 +40,28 @@ class BarangModel {
     static async deleteBarang(id) {
         try {
             const query = {
-                text: 'DELETE FROM barang WHERE id=$1',
+                text: 'DELETE FROM barang WHERE barang_id=$1',
                 values: [id]
             }
 
             await client.query(query)
 
             return 'successfully deleted item'
+        } catch (error) {
+            throw (error)
+        }
+    }
+
+    static async updateBarang(id, nama, harga) {
+        try {
+
+            const query = {
+                text: 'UPDATE barang SET barang_nama = $1, barang_harga = $2 WHERE barang_id = $3 RETURNING *',
+                values: [nama, harga, id]
+            }
+
+            const res = await client.query(query)
+            return res.rows
         } catch (error) {
             throw (error)
         }
