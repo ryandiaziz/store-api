@@ -25,7 +25,7 @@ class BarangModel {
             const id = generateID()
 
             const query = {
-                text: 'INSERT INTO barang(barang_id, barang_nama, barang_harga) VALUES(DEFAULT,$1,$2) RETURNING *',
+                text: 'INSERT INTO barang(barang_id, nama_barang, harga_barang) VALUES(DEFAULT,$1,$2) RETURNING *',
                 values: [nama, harga]
             }
 
@@ -54,13 +54,13 @@ class BarangModel {
 
     static async updateBarang(id, nama, harga) {
         try {
-
             const query = {
-                text: 'UPDATE barang SET barang_nama = $1, barang_harga = $2 WHERE barang_id = $3 RETURNING *',
+                text: 'UPDATE barang SET nama_barang = $1, harga_barang = $2 WHERE barang_id = $3 RETURNING *',
                 values: [nama, harga, id]
             }
 
             const res = await client.query(query)
+
             return res.rows
         } catch (error) {
             throw (error)

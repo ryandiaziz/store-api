@@ -5,28 +5,45 @@ import BarangModel from "./barangModel.js"
 class PenjualanModel {
     static async getPenjualanById(id) {
         try {
-            const result = await client.query('SELECT p.penjualan_id, p.penjualan_date, p.total_amount, b.barang_id, b.barang_nama FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id WHERE p.penjualan_id = $1', [id])
+            const result = await client.query('SELECT p.penjualan_id, p.tanggal_penjualan, p.nama_pembeli, p.hp_pembeli, p.total, b.barang_id, b.nama_barang, b.harga_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id WHERE p.penjualan_id = $1', [id])
 
-            return result.rows
+            const dataBarang = result.rows.map(item => {
+                return {
+                    barang_id: item.barang_id,
+                    nama_barang: item.nama_barang,
+                    harga_barang: item.harga_barang
+                }
+            })
+
+            const dataPenjualan = {
+                penjualan_id: result.rows[0].penjualan_id,
+                tanggal_penjualan: result.rows[0].tanggal_penjualan,
+                nama_pembeli: result.rows[0].nama_pembeli,
+                hp_pembeli: result.rows[0].hp_pembeli,
+                total: result.rows[0].total,
+                barang: dataBarang
+            }
+
+            return dataPenjualan
         } catch (error) {
             throw (error)
         }
     }
 
-    static async addPenjualan(barang) {
+    static async addPenjualan(barang, nama_pembeli, hp_pembeli) {
         try {
             const promisesBarang = barang.map(id => {
                 return BarangModel.getBarangById(id)
             })
             const dataBarang = await Promise.all(promisesBarang)
-            const total_amount = dataBarang.reduce((prev, current) => {
-                return prev + (+current.barang_harga)
+            const total = dataBarang.reduce((prev, current) => {
+                return prev + (+current.harga_barang)
             }, 0)
-            const penjualan_date = generateDate()
+            const tanggal_penjualan = generateDate()
 
             const queryPenjualan = {
-                text: 'INSERT INTO penjualan(penjualan_id, penjualan_date, total_amount) VALUES(DEFAULT, $1, $2) RETURNING *',
-                values: [penjualan_date, total_amount]
+                text: 'INSERT INTO penjualan(penjualan_id, tanggal_penjualan, nama_pembeli, hp_pembeli, total) VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *',
+                values: [tanggal_penjualan, nama_pembeli, hp_pembeli, total]
             }
             const res = await client.query(queryPenjualan)
             // return res.rows

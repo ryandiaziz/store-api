@@ -18,7 +18,8 @@ class PenjualanController {
     }
     static async addPenjualan(req, res) {
         try {
-            const result = await PenjualanModel.addPenjualan(req.body.barang)
+            const { barang, nama_pembeli, hp_pembeli } = req.body
+            const result = await PenjualanModel.addPenjualan(barang, nama_pembeli, hp_pembeli)
             res.json({
                 status: true,
                 data: result
