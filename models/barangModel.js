@@ -1,5 +1,5 @@
 import client from "../connection.js"
-import { generateID, generateDate } from "../helper/generateData.js"
+import { generateID } from "../helper/generateData.js"
 
 class BarangModel {
     static async getBarang() {
@@ -46,7 +46,7 @@ class BarangModel {
 
             await client.query(query)
 
-            return 'successfully deleted item'
+            return 'successfully deleted'
         } catch (error) {
             throw (error)
         }

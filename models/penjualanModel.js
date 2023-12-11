@@ -30,7 +30,7 @@ class PenjualanModel {
         try {
             await client.query('DELETE FROM penjualan_barang WHERE penjualan_id = $1', [id])
             await client.query('DELETE FROM penjualan WHERE penjualan_id = $1', [id])
-            return 'Success'
+            return 'successfully deleted'
         } catch (error) {
             throw (error)
         }
@@ -39,25 +39,7 @@ class PenjualanModel {
     static async getPenjualanById(id) {
         try {
             const result = await client.query('SELECT p.penjualan_id, p.tanggal_penjualan, p.nama_pembeli, p.hp_pembeli, p.total, b.barang_id, b.nama_barang, b.harga_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id WHERE p.penjualan_id = $1', [id])
-
-            const dataBarang = result.rows.map(item => {
-                return {
-                    barang_id: item.barang_id,
-                    nama_barang: item.nama_barang,
-                    harga_barang: item.harga_barang
-                }
-            })
-
-            const dataPenjualan = {
-                penjualan_id: result.rows[0].penjualan_id,
-                tanggal_penjualan: result.rows[0].tanggal_penjualan,
-                nama_pembeli: result.rows[0].nama_pembeli,
-                hp_pembeli: result.rows[0].hp_pembeli,
-                total: result.rows[0].total,
-                barang: dataBarang
-            }
-
-            return dataPenjualan
+            return filterData(result.rows)
         } catch (error) {
             throw (error)
         }
@@ -79,11 +61,13 @@ class PenjualanModel {
                 values: [tanggal_penjualan, nama_pembeli, hp_pembeli, total]
             }
             const res = await client.query(queryPenjualan)
-            // return res.rows
+
             const promisesJunction = barang.map(id => {
                 return client.query('INSERT INTO penjualan_barang(penjualan_id, barang_id) VALUES($1, $2)', [res.rows[0].penjualan_id, id])
             })
             await Promise.all(promisesJunction)
+
+            return 'successfully added'
 
         } catch (error) {
             throw (error)

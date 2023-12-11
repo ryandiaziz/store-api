@@ -17,6 +17,7 @@ const filterData = (datas) => {
                 total: c.total,
                 barang: [
                     {
+                        barang_id: c.barang_id,
                         nama_barang: c.nama_barang,
                         harga_barang: c.harga_barang
                     }
@@ -26,6 +27,7 @@ const filterData = (datas) => {
         }
         if (p[p.length - 1].penjualan_id === c.penjualan_id) {
             p[p.length - 1].barang.push({
+                barang_id: c.barang_id,
                 nama_barang: c.nama_barang,
                 harga_barang: c.harga_barang
             })
@@ -39,6 +41,7 @@ const filterData = (datas) => {
                 total: c.total,
                 barang: [
                     {
+                        barang_id: c.barang_id,
                         nama_barang: c.nama_barang,
                         harga_barang: c.harga_barang
                     }
