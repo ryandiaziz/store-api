@@ -1,5 +1,5 @@
 import client from "../connection.js"
-import { generateDate } from "../helper/generateData.js"
+import { generateDate, filterData } from "../helper/generateData.js"
 import BarangModel from "./barangModel.js"
 
 class PenjualanModel {
@@ -7,11 +7,11 @@ class PenjualanModel {
         try {
             const offset = (+page - 1) * (+pageSize)
             const query = {
-                text: 'SELECT p.penjualan_id, p.tanggal_penjualan, p.total, b.barang_id, b.nama_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id WHERE p.tanggal_penjualan BETWEEN $1 AND $2 ORDER BY p.tanggal_penjualan, p.penjualan_id LIMIT $3 OFFSET $4',
+                text: 'SELECT p.penjualan_id, p.tanggal_penjualan, p.nama_pembeli, p.hp_pembeli, p.total, b.barang_id, b.nama_barang, b.harga_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id WHERE p.tanggal_penjualan BETWEEN $1 AND $2 ORDER BY p.tanggal_penjualan, p.penjualan_id LIMIT $3 OFFSET $4',
                 values: [from, to, +pageSize, offset]
             }
             const result = await client.query(query)
-            return result.rows
+            return filterData(result.rows)
         } catch (error) {
             throw (error)
         }
@@ -20,7 +20,7 @@ class PenjualanModel {
     static async getAllPenjualan() {
         try {
             const result = await client.query('SELECT p.penjualan_id, p.tanggal_penjualan, p.nama_pembeli, p.hp_pembeli, p.total, b.barang_id, b.nama_barang, b.harga_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id')
-            return result.rows
+            return filterData(result.rows)
         } catch (error) {
             throw (error)
         }
