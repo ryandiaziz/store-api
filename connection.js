@@ -1,12 +1,10 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import pkg from 'pg';
-const { Client } = pkg;
+const { Pool } = pkg;
 
-const client = new Client({
-    host: 'localhost',
-    user: 'postgres',
-    port: 5432,
-    password: 'admin',
-    database: 'store'
+const pool = new Pool({
+    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
 })
 
-export default client
+export default pool

@@ -1,4 +1,4 @@
-import client from "../connection.js"
+import pool from "../connection.js"
 import { encryptPwd } from "../helper/encrypt.js"
 import { generateID } from "../helper/generateData.js"
 
@@ -13,7 +13,7 @@ class UserModel {
                 values: [id, nama, email, encryptPass]
             }
 
-            await client.query(query)
+            await pool.query(query)
 
             return 'successfully created user'
         } catch (error) {
@@ -23,7 +23,7 @@ class UserModel {
 
     static async getusers() {
         try {
-            const data = await client.query('SELECT * FROM userdata')
+            const data = await pool.query('SELECT * FROM userdata')
             return data.rows
         } catch (error) {
             throw (error)
@@ -37,7 +37,7 @@ class UserModel {
                 values: [email]
             }
 
-            const data = await client.query(query)
+            const data = await pool.query(query)
             return data.rows
         } catch (error) {
             throw (error)

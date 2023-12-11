@@ -1,10 +1,10 @@
-import client from "../connection.js"
+import pool from "../connection.js"
 import { generateID } from "../helper/generateData.js"
 
 class BarangModel {
     static async getBarang() {
         try {
-            const res = await client.query('SELECT * FROM barang')
+            const res = await pool.query('SELECT * FROM barang')
             return res.rows
         } catch (error) {
             throw (error)
@@ -13,7 +13,7 @@ class BarangModel {
 
     static async getBarangById(id) {
         try {
-            const res = await client.query('SELECT * FROM barang WHERE barang_id = $1', [id])
+            const res = await pool.query('SELECT * FROM barang WHERE barang_id = $1', [id])
             return res.rows[0]
         } catch (error) {
             throw (error)
@@ -29,7 +29,7 @@ class BarangModel {
                 values: [nama, harga]
             }
 
-            const data = await client.query(query)
+            const data = await pool.query(query)
 
             return data.rows
         } catch (error) {
@@ -44,7 +44,7 @@ class BarangModel {
                 values: [id]
             }
 
-            await client.query(query)
+            await pool.query(query)
 
             return 'successfully deleted'
         } catch (error) {
@@ -59,7 +59,7 @@ class BarangModel {
                 values: [nama, harga, id]
             }
 
-            const res = await client.query(query)
+            const res = await pool.query(query)
 
             return res.rows
         } catch (error) {
