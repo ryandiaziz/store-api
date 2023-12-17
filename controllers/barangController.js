@@ -3,7 +3,8 @@ import BarangModel from '../models/barangModel.js'
 class BarangController {
     static async getBarang(req, res) {
         try {
-            const data = await BarangModel.getBarang()
+            const { pageSize, page } = req.query
+            const data = await BarangModel.getBarang(pageSize, page)
             res.json({
                 status: true,
                 data

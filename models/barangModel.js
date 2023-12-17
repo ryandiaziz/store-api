@@ -2,9 +2,16 @@ import pool from "../connection.js"
 import { generateID } from "../helper/generateData.js"
 
 class BarangModel {
-    static async getBarang() {
+    static async getBarang(pageSize = 0, page = 1) {
         try {
-            const res = await pool.query('SELECT * FROM barang')
+            const queryDefault = {
+                text: 'SELECT * FROM barang'
+            }
+            const queryPagination = {
+                text: 'SELECT * FROM barang LIMIT $1 OFFSET $2',
+                values: [pageSize, ((page - 1) * pageSize)]
+            }
+            const res = await pool.query(pageSize === 0 ? queryDefault : queryPagination)
             return res.rows
         } catch (error) {
             throw (error)

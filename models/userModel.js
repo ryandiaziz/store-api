@@ -25,7 +25,7 @@ class UserModel {
         }
     }
 
-    static async getusers(pageSize = 0, page = 0) {
+    static async getusers(pageSize = 0, page = 1) {
         try {
             const queryDefault = {
                 text: 'SELECT * FROM userdata'
