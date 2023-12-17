@@ -25,9 +25,19 @@ class UserModel {
         }
     }
 
-    static async getusers() {
+    static async getusers(pageSize = 0, page = 0) {
         try {
-            const data = await pool.query('SELECT * FROM userdata')
+            const queryDefault = {
+                text: 'SELECT * FROM userdata'
+            }
+            const queryPagination = {
+                text: 'SELECT * FROM userdata LIMIT $1 OFFSET $2',
+                values: [pageSize, ((page - 1) * pageSize)]
+            }
+
+            const query = +pageSize === 0 ? queryDefault : queryPagination
+
+            const data = await pool.query(query)
             return data.rows
         } catch (error) {
             throw (error)

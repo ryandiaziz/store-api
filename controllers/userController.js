@@ -6,7 +6,8 @@ import { validateUserInput } from '../helper/validate.js';
 class UserController {
     static async getUsers(req, res) {
         try {
-            const data = await UserModel.getusers()
+            const { pageSize, page } = req.query
+            const data = await UserModel.getusers(pageSize, page)
             res.json({
                 status: true,
                 data
