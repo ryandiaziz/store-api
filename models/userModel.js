@@ -5,6 +5,10 @@ import { generateID } from "../helper/generateData.js"
 class UserModel {
     static async createuser(nama, email, password) {
         try {
+            const emailCheck = await this.getOneUser(email)
+            if (emailCheck.length) {
+                throw new Error("email is already in use")
+            }
             const id = generateID()
             const encryptPass = encryptPwd(password)
 

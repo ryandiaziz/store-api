@@ -1,6 +1,7 @@
+import UserModel from '../models/userModel.js'
 import { tokenGenerator } from "../helper/jsonWebToken.js";
 import { decryptPwd } from "../helper/encrypt.js";
-import UserModel from '../models/userModel.js'
+import { validateUserInput } from '../helper/validate.js';
 
 class UserController {
     static async getUsers(req, res) {
@@ -21,7 +22,10 @@ class UserController {
     static async createUser(req, res) {
         try {
             const { nama, email, password } = req.body
+            validateUserInput({ nama, email, password })
+
             const message = await UserModel.createuser(nama, email, password)
+
             res.json({
                 status: true,
                 message
