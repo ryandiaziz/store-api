@@ -19,7 +19,8 @@ class PenjualanController {
 
     static async getAllPenjualan(req, res) {
         try {
-            const result = await PenjualanModel.getAllPenjualan()
+            const { pageSize, page } = req.query
+            const result = await PenjualanModel.getAllPenjualan(pageSize, page)
             res.json({
                 status: true,
                 data: result

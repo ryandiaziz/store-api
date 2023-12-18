@@ -17,10 +17,27 @@ class PenjualanModel {
         }
     }
 
-    static async getAllPenjualan() {
+    static async getAllPenjualan(pageSize = 0, page = 1) {
         try {
-            const result = await pool.query('SELECT p.penjualan_id, p.tanggal_penjualan, p.nama_pembeli, p.hp_pembeli, p.total, b.barang_id, b.nama_barang, b.harga_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id')
-            return filterData(result.rows)
+            if (pageSize === 0) {
+                const queryDefault = {
+                    text: 'SELECT p.penjualan_id, p.tanggal_penjualan, p.nama_pembeli, p.hp_pembeli, p.total, b.barang_id, b.nama_barang, b.harga_barang FROM penjualan p JOIN penjualan_barang pb ON p.penjualan_id = pb.penjualan_id JOIN barang b ON pb.barang_id = b.barang_id'
+                }
+                const result = await pool.query(queryDefault)
+                return filterData(result.rows)
+            } else {
+                const queryPagination = {
+                    text: 'SELECT penjualan_id FROM penjualan LIMIT $1 OFFSET $2',
+                    values: [pageSize, ((+page - 1) * (+pageSize))]
+                }
+                const result = await pool.query(queryPagination)
+                const promisesPenjualan = result.rows.map(item => {
+                    return this.getPenjualanById(item.penjualan_id)
+                })
+                let dataPenjualan = (await Promise.all(promisesPenjualan)).map(item => item[0])
+
+                return dataPenjualan
+            }
         } catch (error) {
             throw (error)
         }
