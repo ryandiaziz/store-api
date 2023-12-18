@@ -36,6 +36,11 @@ class BarangController {
     static async deleteBarang(req, res) {
         try {
             const { id } = req.params
+            const check = await BarangModel.getBarangById(id)
+            if (!check) {
+                throw new Error('item not found')
+            }
+
             const response = await BarangModel.deleteBarang(id)
             res.json({
                 status: true,
