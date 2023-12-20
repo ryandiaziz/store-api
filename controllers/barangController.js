@@ -1,6 +1,21 @@
 import BarangModel from '../models/barangModel.js'
 
 class BarangController {
+    static async getBarangById(req, res) {
+        try {
+            const { id } = req.params
+            const result = await BarangModel.getBarangById(id)
+            res.json({
+                status: true,
+                data: result
+            })
+        } catch (error) {
+            res.json({
+                status: false,
+                message: error.message
+            })
+        }
+    }
     static async getBarang(req, res) {
         try {
             const { pageSize, page } = req.query

@@ -2,6 +2,7 @@ import pool from "../connection.js"
 import { generateID } from "../helper/generateData.js"
 
 class BarangModel {
+
     static async getBarang(pageSize = 0, page = 1) {
         try {
             const queryDefault = {
